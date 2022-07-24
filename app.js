@@ -1,4 +1,4 @@
-import { io } from "socket.io-client"
+import { io } from "./node_modules/socket.io-client"
 
 const newMessageForm = document.getElementById('message-form')
 const message = document.getElementById('message')
@@ -43,6 +43,8 @@ newMessageForm.addEventListener('submit', (e) => {
             showMessage(userId, text)
             break;
     }
+
+    // Todo add end to end encryption
     socket.emit('message', text, room.value)
     newMessageForm.reset()
 })
