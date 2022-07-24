@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link
+      rel="stylesheet"
+      href="node_modules/bootstrap/dist/css/bootstrap.min.css"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <script defer src="app.js" type="module"></script>
+  </head>
+  <body>
+    <article id="chat-room" class="text-dark">
+      <header class="bg-success text-light rounded p-3">
+        <h3>Anonymous Chat Room!</h3>
+        <h5 id="user-id">User ID:</h5>
+      </header>
+      <main>
+        <ul id="messages-list" class="bg-light border rounded"></ul>
+
+        <form id="message-form">
+          <div class="input-group input-group-lg">
+            <input
+              type="text"
+              name=""
+              id="message"
+              class="form-control"
+              placeholder="Message ..."
+              required
+              autofocus
+            />
+            <input type="submit" class="btn btn-success" value="Enviar" />
+          </div>
+        </form>
+        <!-- Todo Add a select for actual Room  and clean the messages list depending on the room -->
+        <form id="room-form">
+          <div class="input-group input-group">
+            <input
+              type="text"
+              name=""
+              id="room"
+              class="form-control"
+              placeholder="Private room name ..."
+              required
+            />
+            <input
+              type="submit"
+              class="btn btn-outline-success"
+              value="Unirme"
+            />
+          </div>
+        </form>
+      </main>
+    </article>
+  </body>
+</html>

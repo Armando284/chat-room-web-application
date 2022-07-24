@@ -1,0 +1,48 @@
+@import url("https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700;900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --white-space: 25px;
+}
+
+body {
+  width: 100%;
+  min-height: 100vh;
+  overflow-x: hidden;
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  font-family: "Roboto", sans-serif;
+}
+
+#chat-room {
+  width: 100%;
+  max-width: 420px;
+  padding: var(--white-space);
+  overflow: hidden;
+}
+
+header {
+  margin-bottom: var(--white-space);
+  font-family: "Merriweather", serif;
+}
+
+#messages-list {
+  height: 50vh;
+  display: block;
+  overflow-y: scroll;
+  padding: var(--white-space);
+  margin-bottom: var(--white-space);
+}
+
+.message {
+  text-align: left;
+}
+
+#message-form {
+  margin-bottom: var(--white-space);
+}
