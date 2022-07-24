@@ -8,7 +8,7 @@ const userIdEl = document.getElementById('user-id')
 const privateRoomForm = document.getElementById('room-form')
 const room = document.getElementById('room')
 
-const socket = io('ws://localhost:3000')
+const socket = io('ws://chat-room-server.vercel.app')
 let userId = ''
 
 // wait for the connection to be done in order to have an id
