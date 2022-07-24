@@ -1,4 +1,4 @@
-import { io } from "./node_modules/socket.io-client"
+// import { io } from "./node_modules/socket.io-client"
 
 const newMessageForm = document.getElementById('message-form')
 const message = document.getElementById('message')
