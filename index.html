@@ -18,49 +18,62 @@
   </head>
   <body>
     <article id="chat-room" class="text-dark">
-      <header class="bg-success text-light rounded p-3">
-        <h3>Anonymous Chat Room!</h3>
-        <h5 id="user-id">Apareces como:</h5>
+      <header class="bg-success text-light rounded p-3 mb-2">
+        <h3>Anonymous</h3>
+        <h1>Chat Room</h1>
+        <h6 id="user-id">Apareces como:</h6>
       </header>
       <main>
-        <div class="bg-light border rounded">
-          <select id="room-select" class="form-select" aria-label="Room select">
-            <option value="Public" selected>Public</option>
-          </select>
-          <ul id="messages-list"></ul>
-        </div>
-        <form id="message-form">
-          <div class="input-group input-group-lg">
-            <input
-              type="text"
-              name=""
-              id="message"
-              class="form-control"
-              placeholder="Mensaje ..."
-              required
-              autofocus
-            />
-            <input type="submit" class="btn btn-success" value="Enviar" />
+        <section aria-label="Room Section" class="mb-2">
+          <form id="room-form">
+            <div class="input-group input-group">
+              <input
+                type="text"
+                name=""
+                id="room"
+                class="form-control"
+                placeholder="Nombre de la sala ..."
+                required
+              />
+              <input
+                type="submit"
+                class="btn btn-outline-secondary"
+                value="Unirme a la sala"
+              />
+            </div>
+          </form>
+          <div class="input-group">
+            <select
+              id="room-select"
+              class="form-select"
+              aria-label="Room select"
+            >
+              <option value="Public" selected>Public</option>
+            </select>
+            <label for="room-select" class="input-group-text">
+              Seleccionar sala
+            </label>
           </div>
-        </form>
-        <!-- Todo Add a select for actual Room  and clean the messages list depending on the room -->
-        <form id="room-form">
-          <div class="input-group input-group">
-            <input
-              type="text"
-              name=""
-              id="room"
-              class="form-control"
-              placeholder="Nombre de la sala ..."
-              required
-            />
-            <input
-              type="submit"
-              class="btn btn-outline-success"
-              value="Unirme"
-            />
+        </section>
+        <section aria-label="messages">
+          <div class="bg-light border rounded">
+            <ul id="messages-list"></ul>
           </div>
-        </form>
+          <form id="message-form">
+            <div class="input-group input-group-lg">
+              <input
+                type="text"
+                name=""
+                id="message"
+                class="form-control"
+                placeholder="Mensaje ..."
+                required
+                autofocus
+              />
+              <input type="submit" class="btn btn-success" value="Enviar" />
+            </div>
+          </form>
+        </section>
       </main>
     </article>
   </body>
