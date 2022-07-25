@@ -89,6 +89,12 @@ privateRoomForm.addEventListener('submit', (e) => {
         privateRoomForm.reset()
         return
     }
+    if (room.value in messages) {
+        roomSelector.value = room.value
+        roomSelector.dispatchEvent(new Event('change'))
+        privateRoomForm.reset()
+        return
+    }
     socket.emit('join-room', room.value, message => {
         messages[room.value] = []
         const option = document.createElement('option')
@@ -133,6 +139,7 @@ function showMessage(_id, _message, _isOld = false) {
         li.append(sended)
     }
     messagesList.append(li)
+    li.scrollIntoView({ behavior: 'smooth' })
     return sended
 }
 
