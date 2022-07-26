@@ -19,19 +19,45 @@ roomSelector.addEventListener('change', () => {
     })
 })
 
-const socket = io('https://anonymous-chat-room-server.herokuapp.com')
+const SERVER = 'https://anonymous-chat-room-server.herokuapp.com'
+
+addMessage('Bienvenido al chat!', 'Enter /help to get advanced functions', 'alert-success')
+
+const dailyAdvice = async () => {
+    const response = await fetch('https://api.adviceslip.com/advice')
+    if (response.status === 200) {
+        const message = await response.json()
+        addMessage('Daily advice!', message['slip'].advice, 'alert-dark')
+    }
+}
+
+dailyAdvice()
+
+const socket = io(SERVER)
 // const socket = io('http://localhost:3000')
 
 let userId = ''
 
-const messages = { 'Public': [] }
+let messages = { 'Public': [] }
 
 // wait for the connection to be done in order to have an id
 socket.on('connect', () => {
     userId = socket.id?.slice(0, 4)
     console.log("🚀 ~ file: app.js ~ line 10 ~ userId", userId)
     userIdEl.innerText = `Apareces como: ${userId}`
-    console.clear()
+    addMessage('You are connected!', `Other users will see you ass ${userId}`, 'alert-success')
+    // console.clear()
+})
+
+socket.on('connect_error', () => {
+    console.log('connect_error')
+})
+
+socket.on('disconnect', () => {
+    console.log('disconnect')
+    messagesList.innerHTML = ''
+    messages = { 'Public': [] }
+    addMessage('Disconected!', 'There was an error connecting to the server', 'alert-danger')
 })
 
 socket.on('message', data => {
@@ -56,6 +82,10 @@ newMessageForm.addEventListener('submit', (e) => {
     switch (text) {
         case '/creator':
             nameCreator()
+            newMessageForm.reset()
+            return
+        case '/advice':
+            dailyAdvice()
             newMessageForm.reset()
             return
         case '/help':
@@ -121,8 +151,8 @@ function showMessage(_id, _message, _isOld = false) {
     if (!_id || !_message) return
     const isMyMessage = _id === userId
     const li = document.createElement('li')
-    li.classList.add('message', 'alert', 'row')
-    li.classList.add(isMyMessage ? 'alert-success' : 'alert-primary')
+    li.classList.add('message', 'alert', 'row', 'shadow')
+    li.classList.add(isMyMessage ? 'alert-primary' : 'alert-info')
     const text = document.createElement('div')
     text.classList.add('col-11')
     text.innerHTML = _message
@@ -143,24 +173,32 @@ function showMessage(_id, _message, _isOld = false) {
     return sended
 }
 
-function showRoomMessage(_room) {
-    if (!_room) return
-    const li = document.createElement('li')
-    li.classList.add('message', 'alert', 'alert-dark')
-    li.innerHTML = _room
-    messagesList.append(li)
+function showRoomMessage(_roomMessage) {
+    if (!_roomMessage) return
+    addMessage(_roomMessage, '', 'alert-success')
 }
 
 function nameCreator() {
-    const li = document.createElement('li')
-    li.classList.add('message', 'alert', 'alert-danger')
-    li.innerHTML = `<strong><i>App creator is:</i></strong> Armando J. Peña Tamayo`
-    messagesList.append(li)
+    addMessage('App creator is:', 'Armando J. Peña Tamayo', 'alert-success')
 }
 
 function help() {
+    addMessage('Current functions are:', '', 'alert-success')
+    addMessage('/help:', 'Shows a list of current functions', 'alert-success')
+    addMessage('/creator:', 'Shows the name of the creator of this app', 'alert-success')
+    addMessage('/advice:', 'Gives you a random advice', 'alert-success')
+}
+
+/**
+ * @param  {string} _title
+ * @param  {string} _message
+ * @param  {'alert-dark'|'alert-secondary'|'alert-light'|'alert-danger'|'alert-warning'} colorClass 
+ */
+function addMessage(_title, _message = '', colorClass = 'alert-dark' | 'alert-secondary' | 'alert-light' | 'alert-danger' | 'alert-warning') {
     const li = document.createElement('li')
-    li.classList.add('message', 'alert', 'alert-warning')
-    li.innerHTML = `<strong><i>Current functions are:</i></strong> /creator : Shows the creator of this app's name`
+    li.classList.add('message', 'alert', colorClass, 'shadow', 'alert-dismissible', 'fade', 'show')
+    li.setAttribute('role', 'alert')
+    li.innerHTML = `<strong>${_title}</strong> <br /> <i>${_message}</i>`
     messagesList.append(li)
+    li.scrollIntoView({ behavior: 'smooth' })
 }
