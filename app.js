@@ -30,8 +30,8 @@ const dailyAdvice = async () => {
 
 dailyAdvice()
 
-// const socket = io(SERVER)
-const socket = io('http://localhost:3000')
+const socket = io(SERVER)
+// const socket = io('http://localhost:3000')
 
 let userId = ''
 
