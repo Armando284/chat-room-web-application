@@ -5,19 +5,16 @@ const newMessageForm = document.getElementById('message-form')
 const message = document.getElementById('message')
 const messagesList = document.getElementById('messages-list')
 const userIdEl = document.getElementById('user-id')
+const othersEl = document.getElementById('others')
+othersEl.innerText = 'Estas solo'
 
+const roomSide = document.getElementById('rooms-side')
+updateRooms()
 const privateRoomForm = document.getElementById('room-form')
 const room = document.getElementById('room')
 
 const roomSelector = document.getElementById('room-select')
 let selectedRoom = 'Public'
-roomSelector.addEventListener('change', () => {
-    selectedRoom = roomSelector.value
-    messagesList.innerHTML = ''
-    messages[selectedRoom].forEach(message => {
-        showMessage(message.id, message.message, true)
-    })
-})
 
 const SERVER = 'https://anonymous-chat-room-server.herokuapp.com'
 
@@ -33,8 +30,8 @@ const dailyAdvice = async () => {
 
 dailyAdvice()
 
-const socket = io(SERVER)
-// const socket = io('http://localhost:3000')
+// const socket = io(SERVER)
+const socket = io('http://localhost:3000')
 
 let userId = ''
 
@@ -43,32 +40,33 @@ let messages = { 'Public': [] }
 // wait for the connection to be done in order to have an id
 socket.on('connect', () => {
     userId = socket.id?.slice(0, 4)
-    console.log("🚀 ~ file: app.js ~ line 10 ~ userId", userId)
-    userIdEl.innerText = `Apareces como: ${userId}`
+    userIdEl.innerText = userId
     addMessage('You are connected!', `Other users will see you ass ${userId}`, 'alert-success')
-    // console.clear()
-})
-
-socket.on('connect_error', () => {
-    console.log('connect_error')
 })
 
 socket.on('disconnect', () => {
-    console.log('disconnect')
     messagesList.innerHTML = ''
     messages = { 'Public': [] }
     addMessage('Disconected!', 'There was an error connecting to the server', 'alert-danger')
 })
 
 socket.on('message', data => {
-    console.log("🚀 ~ file: app.js ~ line 30 ~ data", data)
-    // const decrypted = CryptoJS.AES.decrypt(data.message, PASSWORD)
-    // const message = decrypted.toString()
     if (!messages[data.room]) return
     messages[data.room].push({ id: data.id, messageId: data.messageId, message: data.message })
     if (selectedRoom === data.room) {
         showMessage(data.id, data.message)
+        return
     }
+    const button = Array.from(roomSide.children).find((button, index) => {
+        return button.children.namedItem('room-name').innerText === data.room
+    })
+    const badge = button.children.namedItem('unread-msgs')
+    badge.innerText = parseInt(badge.innerText) + 1
+})
+
+socket.on('update-connections', data => {
+    const otros = data.connected - 1
+    othersEl.innerText = otros <= 0 ? 'estas solo' : otros === 1 ? `hay otro usuario conectado` : `hay otros ${otros} usuarios conectados`
 })
 
 newMessageForm.addEventListener('submit', (e) => {
@@ -99,7 +97,6 @@ newMessageForm.addEventListener('submit', (e) => {
     const textId = 0
     const sended = showMessage(userId, text)
     // Todo add end to end encryption
-    // const encrypted = CryptoJS.AES.encrypt(text, PASSWORD)
     socket.emit('message', { messageId: textId, message: text }, selectedRoom, done => {
         if (done === 'sended') {
             sended.classList.remove('sending')
@@ -120,21 +117,25 @@ privateRoomForm.addEventListener('submit', (e) => {
         return
     }
     if (room.value in messages) {
-        roomSelector.value = room.value
-        roomSelector.dispatchEvent(new Event('change'))
+        const roomSelected = Array.from(roomSide.children).find((button, index) => {
+            return button.children.namedItem('room-name').innerText === room.value
+        })
+        roomSelected.dispatchEvent(new Event('pointerdown'))
         privateRoomForm.reset()
         return
     }
     socket.emit('join-room', room.value, message => {
         messages[room.value] = []
-        const option = document.createElement('option')
-        option.value = room.value
-        option.innerText = room.value
-        Array.from(roomSelector.children).forEach(childOption => {
-            if (childOption.selected) childOption.selected = false
-        })
-        option.selected = true
-        roomSelector.append(option)
+        const newButton = document.createElement('button')
+        newButton.setAttribute('type', 'button')
+        newButton.classList.add('list-group-item', 'list-group-item-action', 'd-flex', 'justify-content-between', 'align-items-start')
+        newButton.innerHTML = `<div name="room-name" class="ms-2 me-auto">${room.value}</div>
+        <span name="unread-msgs" class="badge bg-danger rounded-pill">
+          0
+        </span>`
+        roomSide.append(newButton)
+        updateRooms()
+        newButton.dispatchEvent(new Event('pointerdown'))
         selectedRoom = room.value
         messagesList.innerHTML = ''
         showRoomMessage(message)
@@ -201,4 +202,22 @@ function addMessage(_title, _message = '', colorClass = 'alert-dark' | 'alert-se
     li.innerHTML = `<strong>${_title}</strong> <br /> <i>${_message}</i>`
     messagesList.append(li)
     li.scrollIntoView({ behavior: 'smooth' })
+}
+
+function updateRooms() {
+    Array.from(roomSide.children).forEach(button => {
+        button.addEventListener('pointerdown', () => {
+            Array.from(roomSide.children).forEach(button => {
+                button.classList.remove('active')
+            })
+            button.classList.add('active')
+            selectedRoom = button.children.namedItem('room-name').innerText
+            messagesList.innerHTML = ''
+            messages[selectedRoom].forEach(message => {
+                showMessage(message.id, message.message, true)
+            })
+            const badge = button.children.namedItem('unread-msgs')
+            badge.innerText = '0'
+        })
+    })
 }

@@ -16,65 +16,85 @@
     <script defer src="https://cdn.socket.io/socket.io-3.0.0.js"></script>
     <script defer src="app.js" type="module"></script>
   </head>
-  <body>
-    <article id="chat-room" class="text-dark">
-      <header class="bg-success text-light rounded p-3 mb-2">
-        <h3>Anonymous</h3>
-        <h1>Chat Room</h1>
-        <h6 id="user-id">Apareces como:</h6>
-      </header>
-      <main>
-        <section aria-label="Room Section" class="mb-2">
-          <form id="room-form">
-            <div class="input-group input-group">
-              <input
-                type="text"
-                name=""
-                id="room"
-                class="form-control"
-                placeholder="Nombre de la sala ..."
-                required
-              />
-              <input
-                type="submit"
-                class="btn btn-outline-secondary"
-                value="Unirme a la sala"
-              />
+  <body class="text-dark">
+    <article id="chat" class="w-100 row">
+      <section class="col-3 bg-light py-2">
+        <div id="rooms-side" class="list-group">
+          <button
+            type="button"
+            class="list-group-item list-group-item-action d-flex justify-content-between align-items-start"
+            aria-current="true"
+          >
+            <div name="room-name" class="ms-2 me-auto">Public</div>
+            <span name="unread-msgs" class="badge bg-danger rounded-pill">
+              0
+            </span>
+          </button>
+        </div>
+      </section>
+      <section id="chat-side" class="col-7">
+        <header class="bg-success text-light rounded p-3 mb-2">
+          <h3>Anonymous</h3>
+          <h1 class="display-4">CHAT ROOM</h1>
+          <h5>
+            Apareces como:
+            <span id="user-id" class="fw-bold"></span>
+          </h5>
+          <span id="others" class="fw-light fst-italic"></span>
+        </header>
+        <main>
+          <section aria-label="Room Section" class="mb-2">
+            <form id="room-form">
+              <div class="input-group input-group">
+                <input
+                  type="text"
+                  name=""
+                  id="room"
+                  class="form-control"
+                  placeholder="Nombre de la sala ..."
+                  required
+                />
+                <input
+                  type="submit"
+                  class="btn btn-outline-secondary"
+                  value="Unirme a la sala"
+                />
+              </div>
+            </form>
+            <div class="input-group">
+              <select
+                id="room-select"
+                class="form-select"
+                aria-label="Room select"
+              >
+                <option value="Public" selected>Public</option>
+              </select>
+              <label for="room-select" class="input-group-text">
+                Seleccionar sala
+              </label>
             </div>
-          </form>
-          <div class="input-group">
-            <select
-              id="room-select"
-              class="form-select"
-              aria-label="Room select"
-            >
-              <option value="Public" selected>Public</option>
-            </select>
-            <label for="room-select" class="input-group-text">
-              Seleccionar sala
-            </label>
-          </div>
-        </section>
-        <section aria-label="messages">
-          <div class="bg-light border rounded">
-            <ul id="messages-list"></ul>
-          </div>
-          <form id="message-form">
-            <div class="input-group input-group-lg">
-              <input
-                type="text"
-                name=""
-                id="message"
-                class="form-control"
-                placeholder="Mensaje ..."
-                required
-                autofocus
-              />
-              <input type="submit" class="btn btn-success" value="Enviar" />
+          </section>
+          <section aria-label="messages">
+            <div class="bg-light border rounded mb-2">
+              <ul id="messages-list"></ul>
             </div>
-          </form>
-        </section>
-      </main>
+            <form id="message-form">
+              <div class="input-group input-group-lg">
+                <input
+                  type="text"
+                  name=""
+                  id="message"
+                  class="form-control"
+                  placeholder="Mensaje ..."
+                  required
+                  autofocus
+                />
+                <input type="submit" class="btn btn-success" value="Enviar" />
+              </div>
+            </form>
+          </section>
+        </main>
+      </section>
     </article>
   </body>
 </html>

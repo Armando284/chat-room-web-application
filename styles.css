@@ -19,13 +19,6 @@ body {
   font-family: "Roboto", sans-serif;
 }
 
-#chat-room {
-  width: 100%;
-  max-width: 420px;
-  padding: var(--white-space);
-  overflow: hidden;
-}
-
 header {
   font-family: "Merriweather", serif;
 }
